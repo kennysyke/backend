@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/kennysyke/backend/issues"
   },
-  "homepage": "https://github.com/kennysyke/backend#readme"
+  "homepage": "https://github.com/kennysyke/backend#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
 }
