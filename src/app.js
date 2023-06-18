@@ -1,42 +1,54 @@
 const http = require("http");
 const getUsers = require("./modules/users");
-const url = require("url");
-const hostname = "127.0.0.1";
-const port = 3003;
 
-const server = http.createServer((request, response) => {
-  const query = url.parse(request.url, true).query;
+const server = http.createServer(async (request, response) => {
+  const url = new URL(request.url, `http://${request.headers.host}`);
+  const params = url.searchParams;
+  const name = params.get("hello");
 
-  if (query.hello !== undefined) {
-    if (query.hello === "") {
-      response.status = 400;
+  if (params.has("hello")) {
+    if (name === "") {
+      response.statusCode = 400;
+      response.statusMessage = "Error";
+      (response.setHeader = "Content-Type"), "text/plain";
       response.write("Enter a name");
       response.end();
     } else {
-      response.status = 200;
-      response.write(`Hello, ${query.hello}!`);
+      response.statusCode = 200;
+      response.statusMessage = "OK";
+      (response.setHeader = "Content-Type"), "text/plain";
+      response.write(`Hello,${name}`);
       response.end();
+      return;
     }
-  } else if (query.users) {
-    response.status = 200;
+  }
+
+  if (request.url === "/") {
+    response.statusCode = 200;
     response.statusMessage = "OK";
+    (response.setHeader = "Content-Type"), "text/plain";
+    response.write("Hello world");
+    response.end();
+
+    return;
+  }
+
+  if (!params.has("hello")) {
+    response.statusCode = 500;
+    response.statusMessage = "not OK";
+    (response.setHeader = "Content-Type"), "text/plain";
+    response.end();
+  }
+
+  if (request.url === "/users") {
+    response.status = 200;
+    response.statusMessage = "ok";
     response.header = "Content-Type: application/json";
     response.write(getUsers());
     response.end();
-  } else if (!query) {
-    response.status = 200;
-    response.write("Hello, World!");
-    response.end();
-  } else {
-    response.status = 500;
-    response.write("");
   }
 });
 
-server.listen(
-  (port,
-  hostname,
-  () => {
-    console.log(`HTTP Server listening at http://${hostname}:${port}/`);
-  })
-); 
+server.listen(3003, () => {
+  console.log("сервер успешно запущен на сервере 127.0.0.1:3003");
+});
